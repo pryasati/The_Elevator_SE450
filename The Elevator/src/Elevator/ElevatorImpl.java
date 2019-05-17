@@ -1,6 +1,5 @@
 package Elevator;
 
-import Exceptions.InvalidInputExcepetion;
 import JSONImport.JSONImport;
 import gui.*;
 import Person.*;
@@ -10,6 +9,7 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
 import static gui.ElevatorDisplay.Direction.*;
 
@@ -31,7 +31,8 @@ public class ElevatorImpl {
     ArrayList riderRequest = new ArrayList<PersonImpl>();
     ArrayList riderRequest1 = new ArrayList<PersonImpl>();
     ArrayList riderRequest4 = new ArrayList<PersonImpl>();
-    StopWatch timeOut = new StopWatch();
+    StopWatch elevatorOneTimeOutTimer = new StopWatch();
+    StopWatch elevatorFourTimeOutTimer = new StopWatch();
     StopWatch waitTime = new StopWatch();
     StopWatch inElevatorWaitTime = new StopWatch();
 
@@ -82,7 +83,7 @@ public class ElevatorImpl {
 
 //in here i am segerating floor requests for e1 and e4
 
-        temporaryoperateelevator();
+        temporatyOperateElevator();
 
 
     }
@@ -92,16 +93,17 @@ public class ElevatorImpl {
 
 
 
-    public void temporaryoperateelevator(){
+    public void temporatyOperateElevator(){
 //check which elevators got request and process their request,but dont set elevator display,Set it for all elevators togther
         //check for elevator 1 if exsisting request is there and which direction it should move
 
-        boolean checkforfloorreqele1= checkexsistingrequestforelevator( 1);
+        boolean checkforfloorreqele1= checkExistingRequestForElevator( 1);
         boolean checkforriderreqele1=checkexistingriderreqforele(1);
-        boolean checkforfloorreqele4= checkexsistingrequestforelevator( 4);
+        boolean checkforfloorreqele4= checkExistingRequestForElevator( 4);
         boolean checkforriderreqele4=checkexistingriderreqforele(4);
         if(checkforfloorreqele1==true||checkforriderreqele1==true)
         {
+
             //determine direction of elevator
             int directions=DetermineDirection(riderRequest1,floorRequest1,this.currentFloorOfTheElevator);
 
@@ -120,9 +122,26 @@ public class ElevatorImpl {
 
 
         }
-        else
+        else if (checkforfloorreqele1==false||checkforriderreqele1==false)
         {
             directionHolderE1=Directionself.IDLE;
+            //pause for door time
+//            try {
+//                Thread.sleep(doorOpenTime);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
+            elevatorOneTimeOutTimer.start();
+            while(elevatorOneTimeOutTimer.getTime(TimeUnit.MILLISECONDS) >= elevatorTimeOut)
+            {
+                directionHolderE1 = Directionself.DOWN;
+
+            }
+            elevatorOneTimeOutTimer.stop();
+            elevatorOneTimeOutTimer.reset();
+
+//tick down idle timer
         }
         if(checkforfloorreqele4==true||checkforriderreqele4==true)
         {
@@ -144,8 +163,24 @@ public class ElevatorImpl {
 //BOTH ELEVATOR GOT EXECUTED
 
         }
-        else {
+        else if (checkforfloorreqele4==false||checkforriderreqele4==false)
+        {
             directionHolderE4=Directionself.IDLE;
+            //pause for door time
+//            try {
+//                Thread.sleep(doorOpenTime);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
+            elevatorFourTimeOutTimer.start();
+            while(elevatorOneTimeOutTimer.getTime(TimeUnit.MILLISECONDS) >= elevatorTimeOut)
+            {
+                directionHolderE4 = Directionself.DOWN;
+            }
+            elevatorFourTimeOutTimer.stop();
+            elevatorFourTimeOutTimer.reset();
+
 //tick down idle timer
         }
         Updateallelevatorstatus();
@@ -201,7 +236,7 @@ public class ElevatorImpl {
         return false;
     }
 
-    public boolean checkexsistingrequestforelevator(int ele)
+    public boolean checkExistingRequestForElevator(int ele)
     {
         switch (ele){
             case 1:
