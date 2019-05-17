@@ -20,10 +20,10 @@ public class Main
             ElevatorDisplay.getInstance().addElevator(i, 1);
         }
 
-        Test1();
-        Test2();
-        Test3();
-        //Test4(); //issues running two elevators at the same time.
+        //Test1();
+        //Test2();
+        //Test3();
+        Test4();
 
     }
 
@@ -70,8 +70,6 @@ public class Main
                     pplstack.push(p1);
 
                     e1.addToStack(pplstack);
-                    e1.floorRequestAdd(p1);
-
                     break;
                 case 12:
                     System.out.println("0: Person 1 enters a floor request (UP) from floor 1");
@@ -83,7 +81,7 @@ public class Main
 
 
             }
-            e1.operateElevator(1);
+            //e1.operateElevator(1, direction, pplstack);
         }
     }
 
@@ -98,6 +96,7 @@ public class Main
 //set default
         direction = Directionself.IDLE;
 
+
         ElevatorImpl e2 = new ElevatorImpl(1);
         PersonImpl p1 = new PersonImpl(1, 20, 5, Directionself.DOWN);
         PersonImpl p2 = new PersonImpl(2, 15, 19, Directionself.UP);
@@ -110,16 +109,16 @@ public class Main
 
                     pplstack.push(p1);
                     e2.addToStack(pplstack);
-                    e2.floorRequestAdd(p1);
+
                     break;
                 case 5:
                     pplstack.push(p2);
                     e2.addToStack(pplstack);
-                    e2.floorRequestAdd(p2);
+
                     break;
 
             }
-            e2.operateElevator(2);
+            // e2.operateElevator(2, direction, pplstack);
         }
     }
 
@@ -135,6 +134,7 @@ public class Main
         direction = Directionself.IDLE;
 
 
+
         ElevatorImpl e3 = new ElevatorImpl(1);
         PersonImpl p1 = new PersonImpl(1, 20, 1, Directionself.DOWN);
         PersonImpl p2 = new PersonImpl(2, 10, 1, Directionself.DOWN);
@@ -147,16 +147,16 @@ public class Main
 
                     pplstack.push(p1);
                     e3.addToStack(pplstack);
-                    e3.floorRequestAdd(p1);
+
                     break;
                 case 25:
                     pplstack.push(p2);
                     e3.addToStack(pplstack);
-                    e3.floorRequestAdd(p2);
+
                     break;
 
             }
-            e3.operateElevator(3);
+            // e3.operateElevator(3, direction, pplstack);
         }
     }
 
@@ -170,6 +170,7 @@ public class Main
         //from.push(0);
 //set default
         direction = Directionself.IDLE;
+
 
         ElevatorImpl e1 = new ElevatorImpl(1);
         ElevatorImpl e4 = new ElevatorImpl(1);
@@ -185,25 +186,26 @@ public class Main
 
                     pplstack.push(p1);
                     e1.addToStack(pplstack);
-                    e1.floorRequestAdd(p1);
+                    e1.floorRequestE1Add(p1);
+                    // e1.floorRequestE4Add(p3);
                     updateelevator=1;
                     break;
                 case 5:
                     pplstack.push(p2);
-                    e1.addToStack(pplstack);
-                    e1.floorRequestAdd(p2);
-                    updateelevator=1;
+                    e1.floorRequestE1Add(p2);
+                    updateelevator=4;
                     break;
                 case 6:
                     pplstack.push(p3);
-                    e4.addToStack(pplstack);
-                    e4.floorRequestAdd(p3);
+                    e1.floorRequestE4Add(p3);
                     updateelevator=4;
                     break;
 
             }
-            e1.operateElevator(updateelevator);
-            //e4.operateElevator(4, direction, pplstack);
+
+            e1.ElevatorDriver();
+
+
         }
     }
 
