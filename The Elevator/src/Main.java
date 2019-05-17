@@ -29,7 +29,6 @@ public class Main
 
     private static void Test1()
     {
-        StopWatch timer = new StopWatch();
         Directionself direction;
         int TotalNumoffloorsPresent = 20;
         int FloorNumber = 10;
